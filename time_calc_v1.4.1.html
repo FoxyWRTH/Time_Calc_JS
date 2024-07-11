@@ -212,38 +212,38 @@
     }
 
     function minus36HoursMoscowTime(hours, minutes, city) {
-        var totalStartMinutes = hours * 60 + minutes;
-        var cityOffset = cityDatabase[city.toUpperCase()][1] * 60 + cityDatabase[city.toUpperCase()][2];
-        var moscowOffset = cityDatabase['SVO'][1] * 60 + cityDatabase['SVO'][2];
-        var offsetDifference = moscowOffset - cityOffset;
-        var totalEndMinutes = totalStartMinutes - 36 * 60 + offsetDifference; // Изменили знак для правильного вычитания
-        var days = 0;
+        const totalStartMinutes = hours * 60 + minutes;
+        const cityOffset = cityDatabase[city.toUpperCase()][1] * 60 + cityDatabase[city.toUpperCase()][2];
+        const moscowOffset = cityDatabase['SVO'][1] * 60 + cityDatabase['SVO'][2];
+        const offsetDifference = moscowOffset - cityOffset;
+        let totalEndMinutes = totalStartMinutes - 36 * 60 + offsetDifference; // Изменили знак для правильного вычитания
+        let days = 0;
         while (totalEndMinutes < 0) {
             days--;
             totalEndMinutes += 24 * 60;
         }
-        var endHours = Math.floor(totalEndMinutes / 60);
-        var endMinutes = totalEndMinutes % 60;
+        const endHours = Math.floor(totalEndMinutes / 60);
+        const endMinutes = totalEndMinutes % 60;
         return {days: days, hours: endHours, minutes: endMinutes};
     }
 
     function minus36HoursLocalTime(hours, minutes) {
         // Переводим переданное время в минуты
-        var totalStartMinutes = hours * 60 + minutes;
+        const totalStartMinutes = hours * 60 + minutes;
 
         // Вычитаем 36 часов (36 * 60 минут)
-        var totalEndMinutes = totalStartMinutes - 36 * 60;
+        let totalEndMinutes = totalStartMinutes - 36 * 60;
 
         // Определение количества дней, если результат отрицательный
-        var days = 0;
+        let days = 0;
         while (totalEndMinutes < 0) {
             days--;
             totalEndMinutes += 24 * 60; // Добавляем 24 часа в минутах
         }
 
         // Определение часов и минут после вычитания 36 часов
-        var endHours = Math.floor(totalEndMinutes / 60);
-        var endMinutes = totalEndMinutes % 60;
+        const endHours = Math.floor(totalEndMinutes / 60);
+        const endMinutes = totalEndMinutes % 60;
 
         // Возвращаем результат
         return {days: days, hours: endHours, minutes: endMinutes};
