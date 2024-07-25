@@ -17,15 +17,13 @@
     <label for="citySelect">Выберите город: </label>
     <select id="citySelect"></select>
     <br/>
-    <input type="text" id="timeInput" placeholder="Введите время (HH:mm)"/>
+    <label for="timeInput"></label><input type="text" id="timeInput"
+                                          placeholder="Введите время (HH:mm)"/>
     <button onclick="calculateTime()">Рассчитать</button>
 </div>
 
-<script type="module" src="js/citiesDB.js" defer></script>
-<!-- Asnee -->
-<script type="module" defer>
-    import cityDatabase from '/js/citiesDB.js';
-
+<script src="./js/citiesDB.js"></script>
+<script>
     function timeCalc(hours, minutes, city = "SVO", svo = 3) {
         if (!cityDatabase.hasOwnProperty(city)) {
             throw new Error(`Города: ---> ${city} <--- Нет в базе с UTC.`);
@@ -210,23 +208,7 @@
             option.textContent = `${cityCode} ${cityName} UTC${utcString}`;
             citySelect.appendChild(option);
         }
-
-        const container = document.getElementById("container");
-        const width = container.offsetWidth;
-
-        const inputs = document.querySelectorAll("input, select, button");
-        inputs.forEach((input) => {
-            input.style.width = `${width}px`;
-        });
     });
-
-    document
-        .getElementById("timeInput")
-        .addEventListener("keyup", function (event) {
-            if (event.key === "Enter") {
-                calculateTime();
-            }
-        });
 </script>
 </body>
 </html>
