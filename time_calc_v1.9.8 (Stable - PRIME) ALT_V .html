@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="FoxyWRTH">
+    <meta name="description" content="Примитивный калькулятор времени">
+    <title>PTC v1.9.7 (Stable)</title> <!-- Primitive Time Calc -->
+
+
+    <style>
+        :root {
+            --accent-color: #282828;
+            --background-color: #1e1e1e;
+            --text-color: #fff;
+        }
+
+        body {
+            box-sizing: border-box;
+            font-family: Tahoma, Georgia, sans-serif;
+            font-size: 24px;
+            font-style: normal;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        button {
+            font-family: Tahoma, Georgia, sans-serif;
+            padding: 10px 20px;
+            font-size: 28px;
+            cursor: pointer;
+            background-color: #282828;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+            outline: none;
+            user-select: none;
+            /*margin-bottom: 10px;*/
+        }
+
+        select {
+            font-family: Tahoma, Georgia, sans-serif;
+            font-size: 23px;
+            font-style: normal;
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            background-color: #282828;
+            color: #e0e0e0;
+            appearance: none;
+            border: #1e1e1e;
+            outline: none;
+            user-select: none;
+        }
+
+        input {
+            font-family: Tahoma, Georgia, sans-serif;
+            font-size: 23px;
+            font-style: normal;
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            margin-top: 5px;
+            background-color: #282828;
+            color: #e0e0e0;
+            appearance: none;
+            border: #1e1e1e;
+            outline: none;
+            user-select: none;
+        }
+
+        button:hover, .container--tab:hover {
+            font-family: Tahoma, Georgia, sans-serif;
+            background-color: silver;
+            color: #000000;
+        }
+
+        .result_text {
+            font-size: 19px;
+            margin: 1px;
+        }
+
+
+        header {
+            user-select: none;
+            margin-top: 5px;
+            /*background-color: #9d0000;*/
+        }
+
+        .header_title {
+            margin: 0;
+            /*background-color: #4fa3d1;*/
+        }
+
+        .header_description {
+            margin: 0;
+            /*background-color: #0056b3;*/
+        }
+
+        .cluster_1 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cluster_1 button {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            align-self: center;
+        }
+
+        .container {
+            width: 575px;
+            text-align: center;
+            display: block;
+            /*border: 1px solid var(--text-color);*/
+            background-color: var(--background-color);
+            border-radius: 14px;
+        }
+
+        .container--tabs {
+            flex-wrap: nowrap;
+            user-select: none;
+            position: relative;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .container--tab {
+            width: 100%;
+            display: inline-block;
+            background-color: var(--accent-color);
+            cursor: pointer;
+            padding: 10px;
+            transition: 0.5s;
+            border: 3px solid transparent;
+        }
+
+        .container--tab:nth-child(1) {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .container--tab:nth-child(2) {
+            border-radius: 0;
+        }
+
+        .container--tab:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+
+        .cluster--block {
+            padding: 0 40px 7px 40px;
+        }
+
+        .cluster--block button {
+            border-radius: 0 0 10px 10px;
+            transition: .5s;
+        }
+				
+        .cluster--block .ono_button_1 {
+            border-radius: 10px 0px 0px 10px;
+            transition: .5s;
+        }
+		
+        .cluster--block .ono_button_2 {
+            border-radius: 0px 10px 10px 0px;
+            transition: .5s;
+        }
+
+        .container--tab-active {
+            border-bottom: 3px solid white;
+        }
+
+        .nc_result_class {
+            font-size: 18px;
+            user-select: all;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="container--tabs">
+        <div class="container--tab" id="pkv">П.К.В</div>
+        <div class="container--tab" id="ono">О.Н.О</div>
+        <div class="container--tab" id="kps">К.П.С</div>
+    </div>
+
+    <div class="extend_cluster">
+    </div>
+    <div class="cluster--block">
+        <div class="cluster--block-time-calc-tab">
+            <header>
+                <h3 class="header_title">П.К.В</h3>
+                <p class="header_description">Примитивный Калькулятор Времени</p>
+            </header>
+
+            <div class="cluster_1">
+                <label for="citySelect"></label>
+                <select id="citySelect">
+                    <option value="">Выберите город</option>
+                </select>
+                <label for="timeInput">
+                    <input type="text" id="timeInput"
+                           placeholder="HHMM|HHMM+-HHMM">
+                </label>
+                <button onclick="calculateTime()">Вычислить</button>
+                <p class="result_text" id="localResult"></p>
+                <p class="result_text" id="moscowResult"></p>
+                <p class="result_text" id="manualTL"></p>
+                <p class="result_text" id="telegramResult"></p>
+            </div>
+        </div>
+
+        <div class="cluster--block-tab">
+            <header>
+                <h3 class="header_title">О.Н.О</h3>
+                <p class="header_description">Отправка На Оплату ...и Регистрация</p>
+            </header>
+
+            <div class="input_cluster">
+                <label for="PNR_input">
+                    <input type="text" id="PNR_input" placeholder="PNR" maxlength="6">
+                </label>
+                <label for="NAME_input">
+                    <input type="text" id="NAME_input" placeholder="ФАМИЛИЯ" required>
+                </label>
+            </div>
+            <div class="button_container">
+                <button class="ono_button_1" type="button" onclick="send_payment()">Отправить ссылку</button>
+				<button class="ono_button_2" type="button" onclick="send_ckin()">Регистрация</button>
+            </div>
+        </div>
+
+        <div class="cluster--kps-tab">
+            <header>
+                <h3 class="header_title">К.П.С</h3>
+                <p class="header_description">Компилятор Псевдо Сегмента</p>
+                <label for="input_target_segment">
+                    <input type="text" id="input_target_segment" placeholder="Данные о сегменте" required>
+                </label>
+                <button onclick="display_nc_result()">Компилировать</button>
+                <p class="nc_result_class" id="nc_result_id"></p>
+            </header>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /*TAB Mechanics START*/
+    const tabStore = {
+        pkv: {
+            number: 1,
+            tab: document.querySelector('#pkv'),
+            content: document.querySelector('.cluster--block-time-calc-tab'),
+        },
+        ono: {
+            number: 2,
+            tab: document.querySelector('#ono'),
+            content: document.querySelector('.cluster--block-tab'),
+        },
+        kps: {
+            number: 3,
+            tab: document.querySelector('#kps'),
+            content: document.querySelector('.cluster--kps-tab'),
+        },
+    }
+
+    let active_tab;
+    let active_content;
+
+    // Сокрытие Элементов
+    document.addEventListener("DOMContentLoaded", () => {
+        active_tab = tabStore.pkv.tab;
+        active_content = tabStore.pkv.content;
+        active_tab.classList.add("container--tab-active");
+        tabStore.ono.content.style.display = tabStore.kps.content.style.display = 'none';
+    });
+
+    for (let tab in tabStore) {
+        if (tabStore.hasOwnProperty(tab))
+            tabStore[tab].tab.addEventListener('click', (event) => changeTab(tabStore[tab].number, event, tab));
+    }
+
+    function changeTab(number, event, tab) {
+        if (tab !== active_tab) {
+            active_tab.classList.remove("container--tab-active");
+            active_tab = event.target;
+            active_tab.classList.add("container--tab-active");
+
+            document.querySelector(".cluster--block").replaceChild(tabStore[tab].content, active_content);
+            active_content = tabStore[tab].content;
+            active_content.style.display = '';
+        }
+    }
+
+    /*END TAB Mechanics*/
+    /*--------------------------------------------------------------------------------*/
+    /*П.К.В START*/
+    const cityDatabase = {
+        'ARH': ['Архангельск', 3, 0], 'ASF': ['Астрахань', 4, 0],
+        'BAX': ['Барнаул', 7, 0], 'EGO': ['Белгород', 3, 0],
+        'BQS': ['Благовещенск', 9, 0], 'BTK': ['Братск', 8, 0],
+        'BZK': ['Брянск', 3, 0], 'VVO': ['Владивосток', 10, 0],
+        'OGZ': ['Владикавказ', 3, 0], 'VOG': ['Волгоград', 3, 0],
+        'VGD': ['Вологда', 3, 0], 'VOZ': ['Воронеж', 3, 0],
+        'GRV': ['Грозный', 3, 0], 'SVX': ['Екатеринбург', 5, 0],
+        'IWA': ['Иваново', 3, 0], 'IJK': ['Ижевск', 4, 0],
+        'IKT': ['Иркутск', 8, 0], 'JOK': ['Йошкар-Ола', 3, 0],
+        'KZN': ['Казань', 3, 0], 'KGD': ['Калининград', 2, 0],
+        'KEJ': ['Кемерово', 7, 0], 'KVX': ['Киров', 3, 0],
+        'KXK': ['Комсомольск-на-Амуре', 10, 0], 'KMW': ['Кострома', 3, 0],
+        'KRR': ['Краснодар', 3, 0], 'KJA': ['Красноярск', 7, 0],
+        'KRO': ['Курган', 5, 0], 'URS': ['Курск', 3, 0],
+        'LPK': ['Липецк', 3, 0], 'MQF': ['Магнитогорск', 5, 0],
+        'MCX': ['Махачкала', 3, 0], 'VRA': ['Варадеро', -5, 0],
+        'SVO': ['Москва', 3, 0], 'MMK': ['Мурманск', 3, 0],
+        'NAL': ['Нальчик', 3, 0], 'NJC': ['Нижневартовск', 5, 0],
+        'NBC': ['Нижнекамск', 3, 0], 'NOZ': ['Новокузнецк', 7, 0],
+        'OVB': ['Новосибирск', 7, 0], 'NSK': ['Норильск', 7, 0],
+        'OMS': ['Омск', 6, 0], 'OEL': ['Орёл', 3, 0],
+        'REN': ['Оренбург', 5, 0], 'OSW': ['Орск', 5, 0],
+        'PEZ': ['Пенза', 3, 0], 'PES': ['Петрозаводск', 3, 0],
+        'PKV': ['Псков', 3, 0], 'ROV': ['Ростов-на-Дону', 3, 0],
+        'RZN': ['Рязань', 3, 0], 'KUF': ['Самара', 4, 0],
+        'LED': ['Санкт-Петербург', 3, 0], 'SKX': ['Саранск', 3, 0],
+        'RTW': ['Саратов', 4, 0], 'LNX': ['Смоленск', 3, 0],
+        'AER': ['Сочи', 3, 0], 'STW': ['Ставрополь', 3, 0],
+        'SGC': ['Сургут', 5, 0], 'SCW': ['Сыктывкар', 3, 0],
+        'TBW': ['Тамбов', 3, 0], 'TOF': ['Томск', 7, 0],
+        'TJM': ['Тюмень', 5, 0], 'UUD': ['Улан-Удэ', 8, 0],
+        'ULY': ['Ульяновск', 4, 0], 'UFA': ['Уфа', 5, 0],
+        'KHV': ['Хабаровск', 10, 0], 'CSY': ['Чебоксары', 3, 0],
+        'CEK': ['Челябинск', 5, 0], 'CEE': ['Череповец', 3, 0],
+        'HTA': ['Чита', 9, 0], 'YKS': ['Якутск', 9, 0],
+        'IAR': ['Ярославль', 3, 0], 'ABA': ['Абакан', 7, 0],
+        'ADA': ['Адана', 3, 0], 'IZM': ['Измир', 3, 0],
+        'ALA': ['Алматы', 5, 0], 'AUH': ['Абу-Даби', 4, 0],
+        'AYT': ['Анталия', 3, 0], 'BHK': ['Бухара', 5, 0],
+        'BJV': ['Бодрум', 3, 0], 'BKK': ['Бангкок', 7, 0],
+        'CAI': ['Каир', 2, 0], 'CAN': ['Гуанчжоу', 8, 0],
+        'CIT': ['Шымкент', 6, 0], 'CMB': ['Коломбо', 5, 30],
+        'DEL': ['Нью-Дели', 5, 30], 'DLM': ['Даламан', 3, 0],
+        'DXB': ['Дубай', 4, 0], 'DYU': ['Душанбе', 5, 0],
+        'EVN': ['Ереван', 4, 0], 'FEG': ['Фергана', 5, 0],
+        'FRU': ['Бишкек', 6, 0], 'GNJ': ['Гянджа', 4, 0],
+        'GOI': ['Гоа', 5, 30], 'GOJ': ['Нижний Новгород', 3, 0],
+        'GUW': ['Атырау', 5, 0], 'BAK': ['Баку', 4, 0],
+        'HKG': ['Гонконг', 8, 0], 'HKT': ['Пхукет', 7, 0],
+        'HMA': ['Ханты-Мансийск', 5, 0], 'HRG': ['Хургада', 2, 0],
+        'THR': ['Тегеран', 5, 30], 'IST': ['Стамбул', 3, 0],
+        'KGF': ['Караганда', 6, 0], 'KVK': ['Кировск', 3, 0],
+        'MLE': ['Мале', 5, 0], 'MRU': ['Маврикий', 4, 0],
+        'MRV': ['Минеральные Воды', 3, 0], 'MSQ': ['Минск', 3, 0],
+        'NQZ': ['Астана', 5, 0], 'NUX': ['Новый Уренгой', 5, 0],
+        'OSS': ['Ош', 6, 0], 'PEE': ['Пермь', 5, 0],
+        'PKC': ['Петропавловск-Камчатский', 12, 0], 'BJS': ['Пекин', 8, 0],
+        'SHA': ['Шанхай', 8, 0], 'RGK': ['Горно-Алтайск', 7, 0],
+        'SCO': ['Актау', 5, 0], 'SEZ': ['Остров Махе', 4, 0],
+        'SGN': ['Хошимин', 7, 0], 'SKD': ['Самарканд', 5, 0],
+        'SSH': ['Шарм Эль Шейх', 2, 0], 'SYX': ['Санья', 8, 0],
+        'TAS': ['Ташкент', 5, 0], 'CTU': ['Ченгду', 8, 0],
+        'UGC': ['Ургенч', 5, 0], 'UUS': ['Южно-Сахалинск', 11, 0],
+        'DYR': ['Анадырь', 12, 0], 'GDX': ['Магадан', 11, 0],
+        'HAV': ['Гавана', -5, 0], 'HRB': ['Харбин', 8, 0],
+        'KSN': ['Костанай', 6, 0], 'GYD': ['Баку', 4, 0],
+        'DPS': ['Денпасар', 8, 0], 'GSV': ['Саратов', 4, 0],
+        'GYD': ['Баку', 4, 0], 'PKX': ['Пекин', 8, 0],
+        'PVG': ['Шанхай', 8, 0], 'GOX': ['Гоа', 5, 30],
+        'DWC': ['Дубай', 4, 0], 'OHH': ['Оха', 11, 0],
+        'QIN': ['Мерсин', 3, 0], 'COV': ['Мерсин', 3, 0],
+		'MOW': ['Москва', 3, 0], 'VKO': ['Москва', 3, 0]
+    };
+
+    document.querySelector('#timeInput').addEventListener("input", (event) => {
+        event.target.value.length === 4 ? calculateTime() : hideTime();
+    })
+    const hideTime = () => {
+        document.querySelector('#manualTL').innerHTML = document.querySelector('#telegramResult').innerHTML = '';
+    }
+    const MOSCOW_UTC = 3;
+    window.onload = function () {
+        const select = document.getElementById("citySelect");
+        Object.keys(cityDatabase).forEach(code => {
+            const [cityName, cityUTC, cityMinutes] = cityDatabase[code];
+            const option = document.createElement("option");
+            option.value = code;
+            option.text = `${code} | ${cityName} | UTC ${cityUTC >= 0 ? '+' : ''}${cityUTC.toString().padStart(2, '0')}:${cityMinutes.toString().padStart(2, '0')}`;
+            select.appendChild(option);
+        });
+    };
+
+    function calculateTime() {
+        const timeString = document.getElementById("timeInput").value.trim();
+        const operator = timeString.includes('+') ? '+' : (timeString.includes('-') ? '-' : null);
+        const times = operator ? timeString.split(operator) : [timeString];
+        const citySelect = document.getElementById("citySelect");
+        const cityCode = citySelect.value;
+
+        if (!cityCode) {
+            alert("Выберите город.");
+            return;
+        }
+
+        const cityUTC = cityDatabase[cityCode][1];
+        const cityUTC_minutes = cityDatabase[cityCode][2];
+        const resultElement = document.getElementById("localResult");
+        const moscowResultElement = document.getElementById("moscowResult");
+        const manualTL = document.getElementById("manualTL");
+        const telegramResultElement = document.getElementById("telegramResult");
+
+        if (operator) {
+            if (times.length !== 2 || !/^\d{4}$/.test(times[0]) || !/^\d{4}$/.test(times[1])) {
+                alert("Введите время в формате HHMM+HHMM или HHMM-HHMM.");
+                return;
+            }
+
+            const [hours1, minutes1] = parseTime(times[0]);
+            const [hours2, minutes2] = parseTime(times[1]);
+
+            let localResult, moscowResult;
+            if (operator === '+') {
+                localResult = addTime(hours1, minutes1, hours2, minutes2);
+                moscowResult = addTime(hours1 - (cityUTC - MOSCOW_UTC), minutes1 - cityUTC_minutes, hours2, minutes2);
+            } else if (operator === '-') {
+                localResult = subtractTime(hours1, minutes1, hours2, minutes2);
+                moscowResult = subtractTime(hours1 - (cityUTC - MOSCOW_UTC), minutes1 - cityUTC_minutes, hours2, minutes2);
+            }
+
+            resultElement.textContent = `Локальное время: ${localResult}`;
+            moscowResultElement.textContent = `Московское время: ${moscowResult}`;
+
+            manualTL.textContent = "";
+            telegramResultElement.textContent = "";
+        } else {
+            processManualTL();
+        }
+    }
+
+    function processManualTL() {
+        const timeString = document.getElementById("timeInput").value.trim();
+        const citySelect = document.getElementById("citySelect");
+        const cityCode = citySelect.value;
+
+        if (!cityCode) {
+            alert("Выберите город.");
+            return;
+        }
+
+        const resultElement = document.getElementById("localResult");
+        const moscowResultElement = document.getElementById("moscowResult");
+        const manualTL = document.getElementById("manualTL");
+        const telegramResultElement = document.getElementById("telegramResult");
+
+        if (!/^\d{4}$/.test(timeString)) {
+            alert("Введите время в формате HHMM.");
+            return;
+        }
+
+        const [hours, minutes] = parseTime(timeString);
+        try {
+            const manualTLTime = timeCalc(hours, minutes, cityCode, MOSCOW_UTC);
+            const telegramTime = telegram_time_calc(hours, minutes, cityCode);
+
+            manualTL.textContent = `Время для ручного TL при пересадке: [ ${manualTLTime} ]`;
+            telegramResultElement.textContent = `Локальное время вылета из модуля Telegram: [ ${telegramTime} ]`;
+
+            resultElement.textContent = "";
+            moscowResultElement.textContent = "";
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    function parseTime(timeStr) {
+        const regex = /^(-?\d{2})(\d{2})$/;
+        const match = timeStr.match(regex);
+        if (!match) {
+            throw new Error('Некорректный формат времени. Используйте ЧЧММ.');
+        }
+        const hours = parseInt(match[1], 10);
+        const minutes = parseInt(match[2], 10);
+        return [hours, minutes];
+    }
+
+    function timeCalc(hours, minutes, city = 'SVO', svo = MOSCOW_UTC) {
+        if (!cityDatabase.hasOwnProperty(city)) {
+            throw new Error(`Города: ---> ${city} <--- Нет в базе с UTC.`);
+        }
+
+        const localFlightTime = new Date();
+        localFlightTime.setUTCHours(hours);
+        localFlightTime.setUTCMinutes(minutes);
+
+        const targetShiftHours = cityDatabase[city][1] - svo;
+        const hours_shiftInMilliseconds = targetShiftHours * 60 * 60 * 1000;
+
+        const targetShiftMinutes = cityDatabase[city][2];
+        const minutes_shiftInMilliseconds = targetShiftMinutes * 60 * 1000;
+
+        const minusFortyMinutes = 40 * 60 * 1000;
+
+        const timeLimit = new Date(localFlightTime.getTime() - hours_shiftInMilliseconds - minutes_shiftInMilliseconds - minusFortyMinutes);
+
+        return formatTime(timeLimit.getUTCHours(), timeLimit.getUTCMinutes());
+    }
+
+    function formatTime(hours, minutes, daysDifference = 0) {
+        let daysText = '';
+        if (daysDifference > 0) {
+            daysText = `(+${daysDifference} день) `;
+        } else if (daysDifference < 0) {
+            daysText = `(-${Math.abs(daysDifference)} день) `;
+        }
+        return `${daysText}${hours.toString().padStart(2, '0')}${minutes.toString().padStart(2, '0')}`;
+    }
+
+    function telegram_time_calc(hours, minutes, city = 'SVO') {
+        if (!cityDatabase.hasOwnProperty(city)) {
+            throw new Error(`Города: ---> ${city} <--- Нет в базе с UTC.`);
+        }
+
+        const telegramTime = new Date();
+        telegramTime.setUTCHours(hours);
+        telegramTime.setUTCMinutes(minutes);
+
+        const targetShiftHours = cityDatabase[city][1];
+        const hours_shiftInMilliseconds = targetShiftHours * 60 * 60 * 1000;
+
+        const targetShiftMinutes = cityDatabase[city][2];
+        const minutes_shiftInMilliseconds = targetShiftMinutes * 60 * 1000;
+
+        const telegramResult = new Date(telegramTime.getTime() + hours_shiftInMilliseconds + minutes_shiftInMilliseconds);
+
+        return formatTime(telegramResult.getUTCHours(), telegramResult.getUTCMinutes());
+    }
+
+    function subtractTime(hours1, minutes1, hours2, minutes2) {
+        const totalMinutes1 = hours1 * 60 + minutes1;
+        const totalMinutes2 = hours2 * 60 + minutes2;
+
+        let differenceInMinutes = totalMinutes1 - totalMinutes2;
+
+        const minutesInDay = 24 * 60;
+        let days = 0;
+
+        if (differenceInMinutes < 0) {
+            days = Math.ceil(-differenceInMinutes / minutesInDay);
+            differenceInMinutes += days * minutesInDay;
+        }
+
+        const resultHours = Math.floor(differenceInMinutes / 60);
+        const resultMinutes = differenceInMinutes % 60;
+
+        const formattedHours = resultHours.toString().padStart(2, '0');
+        const formattedMinutes = resultMinutes.toString().padStart(2, '0');
+
+        if (days > 0) {
+            return `-${days} ДН | ${formattedHours}${formattedMinutes}`;
+        } else {
+            return `${formattedHours}${formattedMinutes}`;
+        }
+    }
+
+    function addTime(hours1, minutes1, hours2, minutes2) {
+        const totalMinutes1 = hours1 * 60 + minutes1;
+        const totalMinutes2 = hours2 * 60 + minutes2;
+
+        let differenceInMinutes = totalMinutes1 + totalMinutes2;
+
+        const minutesInDay = 24 * 60;
+        let days = 0;
+
+        if (differenceInMinutes > 0) {
+            days = Math.ceil(-differenceInMinutes / minutesInDay);
+            differenceInMinutes += days * minutesInDay;
+        }
+
+        const resultHours = Math.floor(differenceInMinutes / 60);
+        const resultMinutes = differenceInMinutes % 60;
+
+        const formattedHours = resultHours.toString().padStart(2, '0');
+        const formattedMinutes = resultMinutes.toString().padStart(2, '0');
+
+        if (days < 0) {
+            return `+${days.toString().slice(1)} ДН | ${formattedHours}${formattedMinutes}`;
+        } else {
+            return `${formattedHours}${formattedMinutes}`;
+        }
+    }
+
+    /*END П.К.В*/
+    /*--------------------------------------------------------------------------------*/
+    /*О.Н.О. START*/
+    const send_payment = () => {
+        const take_PNR = document.getElementById("PNR_input").value;
+        const take_NAME = document.getElementById("NAME_input").value;
+
+        if (take_NAME.length === 0 || take_PNR.length !== 6) {
+            alert("Заполните поля корректно!");
+            return;
+        }
+
+        const regex = /^(.*?)\//;
+        const match = take_NAME.match(regex);
+
+        let name_separator = '';
+        if (match) {
+            name_separator = match[1];
+        } else {
+            name_separator = take_NAME;
+        }
+
+        const result = 'https://pay.aeroflot.ru/aeropayment/epr/components/pnrValidation.jsp?PNR=' + take_PNR + '&name=' + name_separator + '&UCID=12345&gds=SIRENA';
+
+        document.getElementById("PNR_input").value = document.getElementById("NAME_input").value = '';
+
+
+        window.open(result);
+    }
+	
+    const send_ckin = () => {
+        const take_PNR = document.getElementById("PNR_input").value;
+        const take_NAME = document.getElementById("NAME_input").value;
+
+        if (take_NAME.length === 0 || take_PNR.length !== 6) {
+            alert("Заполните поля корректно!");
+            return;
+        }
+
+        const regex = /^(.*?)\//;
+        const match = take_NAME.match(regex);
+
+        let name_separator = '';
+        if (match) {
+            name_separator = match[1];
+        } else {
+            name_separator = take_NAME;
+        }
+
+        const result = 'https://www.aeroflot.ru/sb/ckin/app/ru-ru#/search_pnrs?pnr_locator=' + take_PNR + '&last_name=' + name_separator + '&first_name=BORIS+GENNADYEVICH';
+
+        document.getElementById("PNR_input").value = document.getElementById("NAME_input").value = '';
+
+
+        window.open(result);
+    }
+
+    /*END О.Н.О.*/
+    /*--------------------------------------------------------------------------------*/
+    /*K.P.S. START*/
+    function compile_nc_segment(input) {
+        let target_segment = input
+
+        let segComponent = document.querySelector("#segData");
+        let ncBlock = '';
+        let noSegFlag = false;
+
+        let segArr = target_segment.replace(/ +/g, ' ').replace(/ +/g, ' ').split(' ').filter((char) => char !== 'VV');
+
+        if (!segArr[0].match(/^[0-9]$/)) {
+            noSegFlag = true;
+        }
+
+        if (segArr[segArr.length - 1] === 'E' || segArr[segArr.length - 1] === 'LSU') segArr.splice(segArr.length - 1, 1);
+
+        if (segArr[segArr.length - 1] === 'E' || segArr[segArr.length - 1] === 'LSU') segArr.splice(segArr.length - 1, 1);
+
+        for (let i = 0; i < segArr.length; i++) {
+            segComponent += `<td>${segArr[i]}</td>`;
+        }
+
+        if (!noSegFlag)
+            return ncBlock + `0${segArr[1]}${segArr[2]}${segArr[3]}${segArr[4]}NC${segArr[5][2]}/${segArr[0]}/${segArr[6]}/${segArr[7]}//SU*REMPNR`;
+
+        else
+            return ncBlock + `0${segArr[0]}${segArr[1]}${segArr[2]}${segArr[3]}NC${segArr[4][2]}/-/${segArr[5]}/${segArr[6]}//SU*REMPNR`;
+    }
+
+    function display_nc_result() {
+        const input = document.getElementById('input_target_segment').value;
+        document.getElementById('nc_result_id').innerText = compile_nc_segment(input);
+        document.getElementById("input_target_segment").value = ''
+    }
+
+    /*END K.P.S.*/
+    /*--------------------------------------------------------------------------------*/
+    /* START KEY MECHANICS */
+    document.addEventListener('keydown', (event) => {
+        if (active_tab === tabStore.pkv.tab && event.key === "Enter") {
+            document.querySelector('.cluster--block-time-calc-tab button').click();
+        }
+        if (active_tab === tabStore.ono.tab && event.key === "Enter") {
+            document.querySelector('.cluster--block-tab button').click();
+        }
+        if (active_tab === tabStore.kps.tab && event.key === "Enter") {
+            document.querySelector('.cluster--kps-tab button').click();
+        }
+    });
+    /*END KEY MECHANICS*/
+</script>
+</body>
+<!--    author: FXR (Александр Волохов 4149) feat Ginger Smarty (Игорь Никитин 1512) -->
+<!--    shift: Shakhov M -->
+<!--    The Fox's Creed: Всех ждёт плеть. Всех ждёт смерть. -->
+</html>
