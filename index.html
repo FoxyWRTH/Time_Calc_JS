@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="FoxyWRTH">
-    <meta name="description" content="Примитивный калькулятор времени">
+    <meta name="description" content="Примитивный Калькулятор Времени">
     <title>PTC v1.9.8 (Stable)</title> <!-- Primitive Time Calc -->
 
 
@@ -170,17 +170,13 @@
         }
 
         .cluster--block .ono_button_1 {
-            border-radius: 10px 0px 0px 10px;
+            border-radius: 10px 0 0 10px;
             transition: .5s;
         }
 
         .cluster--block .ono_button_2 {
-            border-radius: 0px 10px 10px 0px;
+            border-radius: 0 10px 10px 0;
             transition: .5s;
-        }
-
-        .container--tab-active {
-            border-bottom: 3px solid white;
         }
 
         .nc_result_class {
@@ -378,11 +374,11 @@
         'HAV': ['Гавана', -5, 0], 'HRB': ['Харбин', 8, 0],
         'KSN': ['Костанай', 6, 0], 'GYD': ['Баку', 4, 0],
         'DPS': ['Денпасар', 8, 0], 'GSV': ['Саратов', 4, 0],
-        'GYD': ['Баку', 4, 0], 'PKX': ['Пекин', 8, 0],
+        'PKX': ['Пекин', 8, 0], 'VKO': ['Москва', 3, 0],
         'PVG': ['Шанхай', 8, 0], 'GOX': ['Гоа', 5, 30],
         'DWC': ['Дубай', 4, 0], 'OHH': ['Оха', 11, 0],
         'QIN': ['Мерсин', 3, 0], 'COV': ['Мерсин', 3, 0],
-		'MOW': ['Москва', 3, 0], 'VKO': ['Москва', 3, 0]
+		'MOW': ['Москва', 3, 0]
     };
 
     document.querySelector('#timeInput').addEventListener("input", (event) => {
@@ -654,7 +650,6 @@
         const result = 'https://www.aeroflot.ru/sb/ckin/app/ru-ru#/search_pnrs?pnr_locator=' + take_PNR + '&last_name=' + name_separator + '&first_name=BORIS+GENNADYEVICH';
 
         document.getElementById("PNR_input").value = document.getElementById("NAME_input").value = '';
-
 
         window.open(result);
     }
