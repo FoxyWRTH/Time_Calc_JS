@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="FoxyWRTH">
-    <meta name="description" content="Примитивный Калькулятор Времени">
-    <title>PTC v1.9.8 (Stable)</title> <!-- Primitive Time Calc -->
+    <meta name="description" content="Примитивный калькулятор времени">
+    <title>PTC v1.9.81 (Stable)</title> <!-- Primitive Time Calc -->
 
 
     <style>
@@ -170,13 +170,22 @@
         }
 
         .cluster--block .ono_button_1 {
-            border-radius: 10px 0 0 10px;
+            border-radius: 10px 0px 0px 10px;
             transition: .5s;
         }
 
         .cluster--block .ono_button_2 {
-            border-radius: 0 10px 10px 0;
+            border-radius: 0px 0px 0px 0px;
             transition: .5s;
+        }
+
+        .cluster--block .ono_button_3 {
+            border-radius: 0px 10px 10px 0px;
+            transition: .5s;
+        }
+
+        .container--tab-active {
+            border-bottom: 3px solid white;
         }
 
         .nc_result_class {
@@ -184,9 +193,14 @@
             user-select: all;
         }
 
-        .container--tab-active {
-            border-bottom: 3px solid white;
-        }
+		.button_container{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 10px;
+			width: 100%;
+			box-sizing: border-box;
+		}
 
     </style>
 </head>
@@ -239,8 +253,9 @@
                 </label>
             </div>
             <div class="button_container">
-                <button class="ono_button_1" type="button" onclick="send_payment()">Отправить ссылку</button>
-				<button class="ono_button_2" type="button" onclick="send_ckin()">Регистрация</button>
+                <button class="ono_button_1" type="button" onclick="send_payment()">Ссылка</button>
+				<button class="ono_button_2" type="button" onclick="send_pnr_control()">УПБР</button>
+				<button class="ono_button_3" type="button" onclick="send_ckin()">Регистрация</button>
             </div>
         </div>
 
@@ -378,11 +393,11 @@
         'HAV': ['Гавана', -5, 0], 'HRB': ['Харбин', 8, 0],
         'KSN': ['Костанай', 6, 0], 'GYD': ['Баку', 4, 0],
         'DPS': ['Денпасар', 8, 0], 'GSV': ['Саратов', 4, 0],
-        'PKX': ['Пекин', 8, 0], 'VKO': ['Москва', 3, 0],
+        'GYD': ['Баку', 4, 0], 'PKX': ['Пекин', 8, 0],
         'PVG': ['Шанхай', 8, 0], 'GOX': ['Гоа', 5, 30],
         'DWC': ['Дубай', 4, 0], 'OHH': ['Оха', 11, 0],
         'QIN': ['Мерсин', 3, 0], 'COV': ['Мерсин', 3, 0],
-		'MOW': ['Москва', 3, 0]
+		'MOW': ['Москва', 3, 0], 'VKO': ['Москва', 3, 0]
     };
 
     document.querySelector('#timeInput').addEventListener("input", (event) => {
@@ -651,9 +666,37 @@
             name_separator = take_NAME;
         }
 
-        const result = 'https://www.aeroflot.ru/sb/ckin/app/ru-ru#/search_pnrs?pnr_locator=' + take_PNR + '&last_name=' + name_separator + '&first_name=BORIS+GENNADYEVICH';
+        const result = 'https://www.aeroflot.ru/sb/ckin/app/ru-ru#/search_pnrs?pnr_locator=' + take_PNR + '&last_name=' + name_separator;
 
         document.getElementById("PNR_input").value = document.getElementById("NAME_input").value = '';
+
+
+        window.open(result);
+    }
+
+    const send_pnr_control = () => {
+        const take_PNR = document.getElementById("PNR_input").value;
+        const take_NAME = document.getElementById("NAME_input").value;
+
+        if (take_NAME.length === 0 || take_PNR.length !== 6) {
+            alert("Заполните поля корректно!");
+            return;
+        }
+
+        const regex = /^(.*?)\//;
+        const match = take_NAME.match(regex);
+
+        let name_separator = '';
+        if (match) {
+            name_separator = match[1];
+        } else {
+            name_separator = take_NAME;
+        }
+
+        const result = 'https://www.aeroflot.ru/sb/pnr/app/ru-ru#/pnr?pnr_locator=' + take_PNR + '&last_name=' + name_separator;
+
+        document.getElementById("PNR_input").value = document.getElementById("NAME_input").value = '';
+
 
         window.open(result);
     }
